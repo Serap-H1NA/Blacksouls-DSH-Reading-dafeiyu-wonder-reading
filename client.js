@@ -38,9 +38,9 @@ window.__ModuleLoader__.load({
         widgetHint: '一个贴在游戏窗口右边的置顶小条。',
         strongDock: '强吸附（跟着游戏窗口走）',
         strongDockHint: '关着：拖过一次悬浮窗，它就不再自己归位。打开：游戏窗口一动，它立刻贴回去。',
-        reportTarget: '阅读报告交给',
+        reportTarget: '阅读交给',
         reportTargetAuto: '当前会话',
-        reportTargetHint: '生成阅读报告时，任务发给这里选中的会话；默认交给当前会话。',
+        reportTargetHint: '三个按钮（阅读 / 插图 / 报告）都把内容发给这里选中的会话；默认是侧栏最上面那个。',
         showWidget: '唤起悬浮窗',
         widgetShown: '悬浮窗已启动',
         widgetAlready: '悬浮窗已经在跑了，看游戏窗口右边',
@@ -91,9 +91,9 @@ window.__ModuleLoader__.load({
         widgetHint: 'A small always-on-top strip docked beside the game window.',
         strongDock: 'Strong docking (follow the game window)',
         strongDockHint: 'Off: once you drag the widget, it stops re-docking. On: it snaps back whenever the game window moves.',
-        reportTarget: 'Deliver the report to',
+        reportTarget: 'Deliver readings to',
         reportTargetAuto: 'Current session',
-        reportTargetHint: 'The reading report is handed to the session picked here; the current one by default.',
+        reportTargetHint: 'All three buttons (read / screenshot / report) hand their content to the session picked here; the topmost one by default.',
         showWidget: 'Show the companion',
         widgetShown: 'Companion started',
         widgetAlready: 'It is already running — look beside the game window',
@@ -759,9 +759,9 @@ window.__ModuleLoader__.load({
                     h(
                       'select',
                       {
-                        value: snapshot?.settings?.reportAgentId || sessions[0]?.id || '',
+                        value: snapshot?.settings?.targetAgentId || sessions[0]?.id || '',
                         style: { ...S.field, width: '100%' },
-                        onChange: (event) => applySettings({ reportAgentId: event.target.value }),
+                        onChange: (event) => applySettings({ targetAgentId: event.target.value }),
                       },
                       sessions.map((session) =>
                         h(

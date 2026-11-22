@@ -84,7 +84,7 @@ python scripts/apply_bridge_patch.py <你的 black-souls-mcp>/rgss/BlackSoulsBri
 | `autoAnalyze` | `false` | 自动交给 AI（会花 token，默认关） |
 | `widgetAutoStart` | `true` | 随 DSH 启动悬浮窗 |
 | `dockMode` | `normal` | `strong` = 游戏窗口一动就贴回去 |
-| `reportAgentId` | 空 | 阅读报告交给哪个会话；空 = 侧栏最上面那个 |
+| `targetAgentId` | 空 | 三个按钮把内容交给哪个会话；空 = 侧栏最上面那个 |
 | `ignoreFleeLines` | `true` | 屏蔽「XXX逃跑了」这类战斗提示 |
 
 ## 六、它记下来的东西长什么样

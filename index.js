@@ -62,8 +62,8 @@ export const DEFAULTS = {
   autoAnalyze: false,
   /** Floating-window docking: normal = stop sticking once dragged; strong = follow the game window. */
   dockMode: 'normal',
-  /** 报告交给哪个会话（空 = 当前/最近活跃的那个）。 */
-  reportAgentId: '',
+  /** 三个按钮（阅读/插图/报告）都交给哪个会话；空 = 侧栏最上面那个。 */
+  targetAgentId: '',
   /** 面板用的界面语言（zh / en）；悬浮窗跟着它切词表。 */
   locale: '',
   /** Start the floating companion (widget.py) together with DSH. */
@@ -303,7 +303,7 @@ export class DialogueRecorder {
     merged.ignoreFleeLines = merged.ignoreFleeLines !== false
     merged.widgetAutoStart = merged.widgetAutoStart !== false
     merged.dockMode = merged.dockMode === 'strong' ? 'strong' : 'normal'
-    merged.reportAgentId = String(merged.reportAgentId ?? '').trim()
+    merged.targetAgentId = String(merged.targetAgentId ?? merged.reportAgentId ?? '').trim()
     merged.locale = merged.locale === 'en' ? 'en' : (merged.locale === 'zh' ? 'zh' : '')
     merged.pollMs = coerceNumber(merged.pollMs, DEFAULTS.pollMs, 100, 5000)
     merged.staleMs = coerceNumber(merged.staleMs, DEFAULTS.staleMs, 1000, 60000)
@@ -455,7 +455,8 @@ export class DialogueRecorder {
       if (typeof overrides.reportDir === 'string') this.settings.reportDir = overrides.reportDir.trim()
       if (typeof overrides.widgetAutoStart === 'boolean') this.settings.widgetAutoStart = overrides.widgetAutoStart
       if (overrides.dockMode === 'strong' || overrides.dockMode === 'normal') this.settings.dockMode = overrides.dockMode
-      if (typeof overrides.reportAgentId === 'string') this.settings.reportAgentId = overrides.reportAgentId.trim()
+      const target = overrides.targetAgentId ?? overrides.reportAgentId
+      if (typeof target === 'string') this.settings.targetAgentId = target.trim()
       if (overrides.locale === 'en' || overrides.locale === 'zh') this.settings.locale = overrides.locale
     }
     const runtime = readJsonFile(this.runtimePath, null)
@@ -528,7 +529,7 @@ export class DialogueRecorder {
       reportDir: this.settings.reportDir,
       widgetAutoStart: this.settings.widgetAutoStart,
       dockMode: this.settings.dockMode,
-      reportAgentId: this.settings.reportAgentId,
+      targetAgentId: this.settings.targetAgentId,
       locale: this.settings.locale,
     })
   }
@@ -844,7 +845,7 @@ export class DialogueRecorder {
         autoAnalyze: this.settings.autoAnalyze,
         reportDir: this.settings.reportDir,
         dockMode: this.settings.dockMode,
-        reportAgentId: this.settings.reportAgentId,
+        targetAgentId: this.settings.targetAgentId,
         locale: this.settings.locale,
         lastReport: this.lastReport,
       },
@@ -943,7 +944,7 @@ export class DialogueRecorder {
     if (this.pending.length === 0) return { delivered: false, reason: 'no-pending' }
     const refusal = this.canSpeak(force)
     if (refusal !== undefined) return { delivered: false, reason: refusal }
-    const agent = this.activeAgent()
+    const agent = this.targetAgent()
     if (agent === undefined) return { delivered: false, reason: 'no-session' }
     const batch = this.pending.splice(0, this.pending.length)
     const now = Date.now()
@@ -1132,7 +1133,7 @@ export class DialogueRecorder {
   async actionShot(payload = {}) {
     const capture = this.captureGameWindow()
     if (capture.ok !== true) return { ok: false, reason: capture.reason }
-    const agent = this.activeAgent()
+    const agent = this.targetAgent()
     if (agent === undefined) return { ok: false, reason: 'no-session', file: capture.file }
     this.queueUnread()
     const batch = this.takeUnread()
@@ -1165,9 +1166,9 @@ export class DialogueRecorder {
     return { ok: true, delivered: true, file: capture.file, blocks: batch.length, attached: attachment !== undefined }
   }
 
-  /** 报告交给指定的会话；没指定就用列表最上面的那个。 */
-  reportAgent() {
-    const wanted = String(this.settings.reportAgentId || '').trim() || (this.sessionOptions()[0]?.id ?? '')
+  /** 交给指定的会话；没指定就用侧栏列表最上面的那个。 */
+  targetAgent() {
+    const wanted = String(this.settings.targetAgentId || '').trim() || (this.sessionOptions()[0]?.id ?? '')
     if (wanted.length > 0) {
       const service = typeof this.getAgents === 'function' ? this.getAgents() : undefined
       if (service && typeof service.get === 'function') {
@@ -1231,7 +1232,7 @@ export class DialogueRecorder {
 
   async actionReport() {
     if (this.settings.reportDir.length === 0) return { ok: false, reason: 'no-report-dir' }
-    const agent = this.reportAgent()
+    const agent = this.targetAgent()
     if (agent === undefined) return { ok: false, reason: 'no-session' }
     // A report is usually asked for *after* reading, when nothing is unread any
     // more — so fall back to the most recent blocks instead of refusing.
@@ -1312,7 +1313,7 @@ export class DialogueRecorder {
         reportDir: this.settings.reportDir,
         widgetAutoStart: this.settings.widgetAutoStart,
         dockMode: this.settings.dockMode,
-        reportAgentId: this.settings.reportAgentId,
+        targetAgentId: this.settings.targetAgentId,
         locale: this.settings.locale,
         analysisIdleMs: this.settings.analysisIdleMs,
         analysisCooldownSeconds: this.settings.analysisCooldownSeconds,
@@ -1356,9 +1357,10 @@ export class DialogueRecorder {
         this.settings.dockMode = patch.dockMode
         applied.dockMode = patch.dockMode
       }
-      if (typeof patch.reportAgentId === 'string') {
-        this.settings.reportAgentId = patch.reportAgentId.trim()
-        applied.reportAgentId = this.settings.reportAgentId
+      const target = patch.targetAgentId ?? patch.reportAgentId
+      if (typeof target === 'string') {
+        this.settings.targetAgentId = target.trim()
+        applied.targetAgentId = this.settings.targetAgentId
       }
       if (patch.locale === 'en' || patch.locale === 'zh') {
         this.settings.locale = patch.locale

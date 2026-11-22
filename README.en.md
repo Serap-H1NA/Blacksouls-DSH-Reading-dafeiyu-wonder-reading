@@ -99,7 +99,7 @@ Available in the panel's settings area; also stored in `dataDir/settings.json`.
 | `autoAnalyze` | `false` | Hand lines over automatically (costs tokens, off by default) |
 | `widgetAutoStart` | `true` | Start the widget with DSH |
 | `dockMode` | `normal` | `strong` = snap back whenever the game window moves |
-| `reportAgentId` | empty | Which session receives the report; empty = the topmost one |
+| `targetAgentId` | empty | Which session receives all three buttons; empty = the topmost one |
 | `ignoreFleeLines` | `true` | Drop battle lines like "XXX fled" |
 
 ## 6. What a record looks like
