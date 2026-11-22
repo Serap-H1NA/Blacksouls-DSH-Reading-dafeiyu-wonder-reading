@@ -117,7 +117,7 @@ python scripts/apply_bridge_patch.py <你的 black-souls-mcp>/rgss/BlackSoulsBri
 
 - **发现 bug 或想提改进**：开一个 Issue 最省事，我看到就会回；写清「你在哪、按了什么、期望什么、发生了什么」就已经很够用了。
 - **想直接改代码**：Fork + Pull Request 都欢迎。尤其是悬浮窗在别的分辨率、别的窗口管理器下的表现——我一个人试不过来。
-- **想私聊**：[B 站 @大肥鱼](https://space.bilibili.com/3546903757195991)（UID: 3546903757195991）
+- **想私聊**：[B 站 UID 3546903757195991](https://space.bilibili.com/3546903757195991)
 
 > 不用客气，欢迎来聊。
 

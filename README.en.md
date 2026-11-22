@@ -135,7 +135,7 @@ are genuine narration.
   enough.
 - **Code**: forks and pull requests are welcome — especially how the widget behaves on other resolutions and
   other window managers; I cannot test those alone.
-- **Talk to me**: [Bilibili @大肥鱼](https://space.bilibili.com/3546903757195991) (UID: 3546903757195991)
+- **Talk to me**: [Bilibili UID 3546903757195991](https://space.bilibili.com/3546903757195991)
 
 > No need to be shy — come say hi.
 
