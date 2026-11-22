@@ -28,6 +28,10 @@ beside the game window.
 Without the bridge (or its patches) the plugin still installs, but it will sit at "○ waiting for the game…"
 and record nothing.
 
+**Interface language**: the sidebar panel follows DSH's language (full Chinese and English strings);
+**the floating widget is Chinese-only for now** — its status line and the "吸附" (re-dock) button have no
+English strings yet.
+
 ## 2. Things to know first
 
 1. **Tokens are spent only when you press a button.** Recording, writing files and drawing the widget are
