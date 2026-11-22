@@ -1,5 +1,7 @@
 # 大肥鱼的不思议阅读
 
+**简体中文** | [English](README.en.md)
+
 给《BLACK SOULS II》做的一个 **DSH 插件**：把游戏里的对话记下来（台词 + 说话人 + 地图 + 来源），
 在你按下按钮的那一刻才交给 AI 阅读、看插图、写阅读报告。带一个左侧栏面板，和一个吸在游戏窗口旁边的悬浮窗。
 
@@ -16,7 +18,7 @@
 | --- | --- |
 | **DSH**（DeepSeek Harness） | 本插件是一段 Cordis 插件，装进 DSH 的 `bundles/` 目录里用 |
 | **《BLACK SOULS II》** | 你自己合法拥有的那份（Windows 版） |
-| **`black-souls-mcp`** | 把游戏状态读成 JSON 的桥接器，本插件读的就是它写出的文件 |
+| **[`black-souls-mcp`](https://github.com/yk4464/black-souls-mcp)**（MIT） | 把游戏状态读成 JSON 的桥接器，本插件读的就是它写出的文件 |
 | **桥接器的两处补丁** | 上游没有「说话人」和「F9 触发」，仓库里带了脚本一键补 |
 | **Python 3 + Pillow** | 只有悬浮窗需要；没装 Pillow 时悬浮窗起不来，面板功能不受影响 |
 
