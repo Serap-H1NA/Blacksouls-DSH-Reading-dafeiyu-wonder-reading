@@ -2,8 +2,29 @@
   "name": "@local/dsh-dafeiyu-wonder-reading",
   "version": "2.0.0",
   "private": true,
-  "description": "大肥鱼的不思议阅读：记录 BLACK SOULS II 的对话（带说话人），需要时交给 agent 阅读或写报告。",
+  "description": "大肥鱼的不思议阅读：记录 BLACK SOULS II 的对话（台词 + 说话人 + 地图 + 来源），按下按钮才交给 agent 阅读、看插图、写阅读报告；附一个吸在游戏窗口旁的悬浮窗。",
   "type": "module",
+  "license": "MIT",
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "black-souls",
+    "black-souls-2",
+    "game-dialogue",
+    "dialogue-logger",
+    "rpg-maker",
+    "tkinter",
+    "windows"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Serap-H1NA/dafeiyu-wonder-reading-v0.01.git"
+  },
+  "homepage": "https://github.com/Serap-H1NA/dafeiyu-wonder-reading-v0.01#readme",
+  "bugs": {
+    "url": "https://github.com/Serap-H1NA/dafeiyu-wonder-reading-v0.01/issues"
+  },
   "exports": {
     ".": "./index.js",
     "./client": "./client.js",
@@ -14,11 +35,15 @@
     "index.js",
     "client.js",
     "widget.py",
-    "cordis.patch.yml",
+    "painter.py",
+    "cordis.patch.yml.example",
     "locale/*.json",
     "docs",
+    "scripts",
     "icon.svg",
-    "README.md"
+    "README.md",
+    "README.en.md",
+    "LICENSE"
   ],
   "dsh": {
     "bundle": {

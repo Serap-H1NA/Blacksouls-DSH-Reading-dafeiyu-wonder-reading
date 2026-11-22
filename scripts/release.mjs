@@ -30,6 +30,7 @@ const FILES = [
   'icon.svg',
   'cordis.patch.yml.example',
   'docs/DETAIL.md',
+  'docs/PR.md',
   'docs/preview.png',
   'scripts/apply_bridge_patch.py',
   'scripts/release.mjs',
@@ -57,6 +58,11 @@ function scrub(text) {
 }
 
 fs.rmSync(out, { recursive: true, force: true })
+
+// 发布版用 package.json.publish（带 keywords / repository，且指向真实的 patch 文件）
+const publishPackage = path.join(root, 'package.json.publish')
+const publishTarget = path.join(out, 'package.json')
+
 let copied = 0
 for (const relative of FILES) {
   const source = path.join(root, relative)
@@ -82,6 +88,17 @@ const walk = (directory) => {
   }
 }
 walk(out)
+
+if (fs.existsSync(publishPackage)) {
+  fs.copyFileSync(publishPackage, publishTarget)
+  console.log('用 package.json.publish 覆盖了 dist/package.json')
+}
+// 仓库里给的是可直接改的配置：example → cordis.patch.yml
+const example = path.join(out, 'cordis.patch.yml.example')
+if (fs.existsSync(example)) {
+  fs.copyFileSync(example, path.join(out, 'cordis.patch.yml'))
+  console.log('已生成 dist/cordis.patch.yml（占位路径，用户自己改）')
+}
 
 console.log(`dist/ 生成完成：${copied} 个文件`)
 if (leaks.length > 0) {
