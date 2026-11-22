@@ -126,6 +126,32 @@ def ease(current: int, target: int, factor: float = 0.4) -> int:
     return current + step
 
 
+WORDS = {
+    'zh': {
+        'waiting': '○ 等待游戏…',
+        'recording': '● 记录中',
+        'notRunning': '○ 游戏未运行',
+        'pending': '待发 {n}',
+        'empty': '还没有读到对话',
+        'dock': '吸附',
+        'send': SEND_LABEL,
+        'shot': SHOT_LABEL,
+        'report': REPORT_LABEL,
+    },
+    'en': {
+        'waiting': '○ waiting for game…',
+        'recording': '● recording',
+        'notRunning': '○ game not running',
+        'pending': '{n} queued',
+        'empty': 'nothing read yet',
+        'dock': 'Dock',
+        'send': "Read it~(●'◡'●)",
+        'shot': 'Admire the view ο(=•ω＜=)ρ⌒☆',
+        'report': 'Write a report ☆*: .｡. o(≧▽≦)o .｡.:*☆',
+    },
+}
+
+
 class Widget:
     def __init__(self, data_dir: Path) -> None:
         self.data_dir = data_dir
@@ -254,6 +280,11 @@ class Widget:
             widget.place(x=rect[0], y=rect[1], width=rect[2], height=rect[3])
 
     # -- 画面 -----------------------------------------------------------
+    def _words(self) -> dict:
+        """界面语言：面板把自己的语言写进设置，这里跟着切。"""
+        locale = str((self.panel.get('settings') or {}).get('locale') or 'zh')
+        return WORDS.get(locale, WORDS['zh'])
+
     def _state(self) -> dict:
         counts = self.panel.get('counts', {}) or {}
         unread = int(counts.get('unread') or 0)
@@ -267,14 +298,15 @@ class Widget:
             self.flash_until = time.time() + 0.9
         self.last_unread = unread
 
+        words = self._words()
         if self.hidden_by_minimize:
-            status = '○ 游戏未运行'
+            status = words['notRunning']
         elif online:
-            status = '● 记录中'
+            status = words['recording']
         else:
-            status = '○ 等待游戏…'
+            status = words['waiting']
         if unread:
-            status += f' · 待发 {unread}'
+            status += ' · ' + words['pending'].format(n=unread)
         if time.time() < self.flash_until:
             status += ' ✦'
 
@@ -290,8 +322,9 @@ class Widget:
             'texts': {
                 'status': status,
                 'speaker': speaker,
-                'line': last or '还没有读到对话',
-                'buttons': [SEND_LABEL, SHOT_LABEL, REPORT_LABEL],
+                'line': last or words['empty'],
+                'buttons': [words['send'], words['shot'], words['report']],
+                'dock': words['dock'],
             },
             'colors': {
                 'status': painter.ACCENT if online else painter.FG_DIM,

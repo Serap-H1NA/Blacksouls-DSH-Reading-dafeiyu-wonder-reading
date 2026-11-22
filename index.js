@@ -64,6 +64,8 @@ export const DEFAULTS = {
   dockMode: 'normal',
   /** 报告交给哪个会话（空 = 当前/最近活跃的那个）。 */
   reportAgentId: '',
+  /** 面板用的界面语言（zh / en）；悬浮窗跟着它切词表。 */
+  locale: '',
   /** Start the floating companion (widget.py) together with DSH. */
   widgetAutoStart: true,
   pollMs: 250,
@@ -302,6 +304,7 @@ export class DialogueRecorder {
     merged.widgetAutoStart = merged.widgetAutoStart !== false
     merged.dockMode = merged.dockMode === 'strong' ? 'strong' : 'normal'
     merged.reportAgentId = String(merged.reportAgentId ?? '').trim()
+    merged.locale = merged.locale === 'en' ? 'en' : (merged.locale === 'zh' ? 'zh' : '')
     merged.pollMs = coerceNumber(merged.pollMs, DEFAULTS.pollMs, 100, 5000)
     merged.staleMs = coerceNumber(merged.staleMs, DEFAULTS.staleMs, 1000, 60000)
     merged.idleCloseMs = coerceNumber(merged.idleCloseMs, DEFAULTS.idleCloseMs, 500, 30000)
@@ -453,6 +456,7 @@ export class DialogueRecorder {
       if (typeof overrides.widgetAutoStart === 'boolean') this.settings.widgetAutoStart = overrides.widgetAutoStart
       if (overrides.dockMode === 'strong' || overrides.dockMode === 'normal') this.settings.dockMode = overrides.dockMode
       if (typeof overrides.reportAgentId === 'string') this.settings.reportAgentId = overrides.reportAgentId.trim()
+      if (overrides.locale === 'en' || overrides.locale === 'zh') this.settings.locale = overrides.locale
     }
     const runtime = readJsonFile(this.runtimePath, null)
     if (runtime !== null && typeof runtime === 'object') {
@@ -525,6 +529,7 @@ export class DialogueRecorder {
       widgetAutoStart: this.settings.widgetAutoStart,
       dockMode: this.settings.dockMode,
       reportAgentId: this.settings.reportAgentId,
+      locale: this.settings.locale,
     })
   }
 
@@ -840,6 +845,7 @@ export class DialogueRecorder {
         reportDir: this.settings.reportDir,
         dockMode: this.settings.dockMode,
         reportAgentId: this.settings.reportAgentId,
+        locale: this.settings.locale,
         lastReport: this.lastReport,
       },
       lastLine: this.lastSpokenLine(),
@@ -1307,6 +1313,7 @@ export class DialogueRecorder {
         widgetAutoStart: this.settings.widgetAutoStart,
         dockMode: this.settings.dockMode,
         reportAgentId: this.settings.reportAgentId,
+        locale: this.settings.locale,
         analysisIdleMs: this.settings.analysisIdleMs,
         analysisCooldownSeconds: this.settings.analysisCooldownSeconds,
       },
@@ -1352,6 +1359,10 @@ export class DialogueRecorder {
       if (typeof patch.reportAgentId === 'string') {
         this.settings.reportAgentId = patch.reportAgentId.trim()
         applied.reportAgentId = this.settings.reportAgentId
+      }
+      if (patch.locale === 'en' || patch.locale === 'zh') {
+        this.settings.locale = patch.locale
+        applied.locale = patch.locale
       }
     }
     if (Object.keys(applied).length > 0) this.saveSettings()

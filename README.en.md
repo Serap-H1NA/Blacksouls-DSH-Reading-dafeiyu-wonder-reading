@@ -28,9 +28,9 @@ beside the game window.
 Without the bridge (or its patches) the plugin still installs, but it will sit at "○ waiting for the game…"
 and record nothing.
 
-**Interface language**: the sidebar panel follows DSH's language (full Chinese and English strings);
-**the floating widget is Chinese-only for now** — its status line and the "吸附" (re-dock) button have no
-English strings yet.
+**Interface language**: both the panel and the floating widget follow DSH's language. The panel reads
+DSH's UI language directly; the widget reads the `locale` setting the panel writes (`zh` / `en`), so its
+status line, action buttons and the dock chip all switch with it.
 
 ## 2. Things to know first
 

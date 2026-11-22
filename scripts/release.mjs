@@ -24,6 +24,7 @@ const FILES = [
   'painter.py',
   'package.json',
   'README.md',
+  'README.en.md',
   'LICENSE',
   '.gitignore',
   'icon.svg',

@@ -481,6 +481,12 @@ window.__ModuleLoader__.load({
       const [copied, setCopied] = React.useState(false)
       const [sessions, setSessions] = React.useState([])
 
+      // 把面板当前的语言告诉 Host，悬浮窗跟着切词表
+      React.useEffect(() => {
+        const english = typeof t('settings') === 'string' && t('settings') !== '设置'
+        applySettings({ locale: english ? 'en' : 'zh' }).catch(() => {})
+      }, [])
+
       React.useEffect(() => {
         let alive = true
         const load = async () => {

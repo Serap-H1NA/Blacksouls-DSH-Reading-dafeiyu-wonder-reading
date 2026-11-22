@@ -188,8 +188,8 @@ def compose(width: int, height: int, state: dict) -> Image.Image:
 
     status = rects.get('status')
     if status:
-        draw_text(layer, (status[0], status[1] + 4), texts.get('status', ''),
-                  15, colors.get('status', FG_DIM))
+        draw_mixed(ImageDraw.Draw(layer), (status[0], status[1] + 13), texts.get('status', ''),
+                   15, colors.get('status', FG_DIM))
 
     speaker = rects.get('speaker')
     if speaker and texts.get('speaker'):
@@ -249,7 +249,8 @@ def compose(width: int, height: int, state: dict) -> Image.Image:
         chip = Image.new('RGBA', (dock[2], dock[3]), (0, 0, 0, 0))
         chip.alpha_composite(card_shape(dock[2], dock[3], 10, 'both', '#2f3745'))
         layer.alpha_composite(chip, (dock[0], dock[1]))
-        draw_text(layer, (dock[0] + dock[2] / 2, dock[1] + dock[3] / 2), '吸附', 12, FG, anchor='mm')
+        dock_label = (texts.get('dock') or '吸附')
+        draw_text(layer, (dock[0] + dock[2] / 2, dock[1] + dock[3] / 2), dock_label, 12, FG, anchor='mm')
 
     hide = rects.get('hide')
     if hide:
