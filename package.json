@@ -19,11 +19,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Serap-H1NA/dafeiyu-wonder-reading-v0.01.git"
+    "url": "git+https://github.com/Serap-H1NA/Blacksouls-DSH-Reading-dafeiyu-wonder-reading.git"
   },
-  "homepage": "https://github.com/Serap-H1NA/dafeiyu-wonder-reading-v0.01#readme",
+  "homepage": "https://github.com/Serap-H1NA/Blacksouls-DSH-Reading-dafeiyu-wonder-reading#readme",
   "bugs": {
-    "url": "https://github.com/Serap-H1NA/dafeiyu-wonder-reading-v0.01/issues"
+    "url": "https://github.com/Serap-H1NA/Blacksouls-DSH-Reading-dafeiyu-wonder-reading/issues"
   },
   "exports": {
     ".": "./index.js",

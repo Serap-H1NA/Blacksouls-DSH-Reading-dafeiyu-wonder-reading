@@ -11,19 +11,19 @@
 路径（文件名必须和 url 里的 owner/repo 完全一致）：
 
 ```
-data/plugins/Serap-H1NA__dafeiyu-wonder-reading-v0.01.yml
+data/plugins/Serap-H1NA__Blacksouls-DSH-Reading-dafeiyu-wonder-reading.yml
 ```
 
 内容（`fun` 是分类，见下文；`zh` 可省，维护者会补，但写了更好）：
 
 ```yaml
-url: https://github.com/Serap-H1NA/dafeiyu-wonder-reading-v0.01
-name: Serap-H1NA/dafeiyu-wonder-reading-v0.01
+url: https://github.com/Serap-H1NA/Blacksouls-DSH-Reading-dafeiyu-wonder-reading
+name: Serap-H1NA/Blacksouls-DSH-Reading-dafeiyu-wonder-reading
 category: fun
 description:
   en: 'Reads BLACK SOULS II in-game dialogue (line, speaker, map, and whether it came from a bloodstain, corpse or sign) and hands it to the agent only when you press a button — read, look at a screenshot, or write a reading report; ships a floating widget that docks beside the game window.'
   zh: '把《BLACK SOULS II》游戏里读到的对话（台词、说话人、地图、是血迹还是尸体）记下来，按下按钮才交给 agent 阅读、看插图或写阅读报告；附一个吸在游戏窗口旁的悬浮窗。'
-icon: https://raw.githubusercontent.com/Serap-H1NA/dafeiyu-wonder-reading-v0.01/HEAD/docs/preview.png
+icon: https://raw.githubusercontent.com/Serap-H1NA/Blacksouls-DSH-Reading-dafeiyu-wonder-reading/HEAD/docs/preview.png
 ```
 
 > 描述里如果出现**英文冒号加空格**（`: `），整行必须加引号，否则 YAML 解析失败。
