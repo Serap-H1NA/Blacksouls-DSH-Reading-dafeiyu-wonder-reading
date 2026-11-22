@@ -990,7 +990,8 @@ export class DialogueRecorder {
   canSpeak(force) {
     const now = Date.now()
     this.deliveryTimes = this.deliveryTimes.filter((time) => now - time < 3600000)
-    if (this.deliveryTimes.length >= this.settings.maxAnalysisPerHour) return 'hourly-limit'
+    // 手动按键永远放行（每次都是一轮、你自己按的）；上限只挡自动分析。
+    if (!force && this.deliveryTimes.length >= this.settings.maxAnalysisPerHour) return 'hourly-limit'
     if (force) return undefined
     if (!this.settings.autoAnalyze) return 'auto-off'
     if (now - this.lastDialogueAt < this.settings.analysisIdleMs) return 'waiting'

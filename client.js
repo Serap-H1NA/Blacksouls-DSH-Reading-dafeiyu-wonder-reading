@@ -61,6 +61,10 @@ window.__ModuleLoader__.load({
         transcript: '记录文件',
         noReportDir: '请设置阅读报告存放位置',
         noContent: '还没有可用来写报告的内容',
+        hourlyLimit: '这一小时已经交给我的次数到上限了（自动分析才会被限，手动按钮不受影响）',
+        autoOff: '自动分析是关着的：要用就按按钮，或去设置里打开',
+        cooldown: '刚交过一次，稍等一下再按',
+        waiting: '你还在读，等这段结束再交',
         minimized: '游戏窗口最小化时截不到图',
         noWindow: '没找到游戏窗口',
         noSession: '没找到可用的会话',
@@ -114,6 +118,10 @@ window.__ModuleLoader__.load({
         transcript: 'Transcript',
         noReportDir: 'Set the report folder first',
         noContent: 'Nothing to report on yet',
+        hourlyLimit: 'Hourly hand-over limit reached (only automatic analysis is capped; buttons are not)',
+        autoOff: 'Automatic analysis is off — press a button, or enable it in settings',
+        cooldown: 'Just handed over — wait a moment',
+        waiting: 'Still reading — hand over once this block ends',
         minimized: 'The game window is minimized, so there is nothing to capture',
         noWindow: 'The game window was not found',
         noSession: 'No usable session',
@@ -431,6 +439,10 @@ window.__ModuleLoader__.load({
         'no-game-window': 'noWindow',
         'no-session': 'noSession',
         'no-pending': 'noContent',
+        'hourly-limit': 'hourlyLimit',
+        'auto-off': 'autoOff',
+        cooldown: 'cooldown',
+        waiting: 'waiting',
       }
       return map[reason] !== undefined ? t(map[reason]) : reason
     }
@@ -538,6 +550,9 @@ window.__ModuleLoader__.load({
         try {
           const result = await post('/action', { action, note: action === 'send' ? draft.trim() : '' })
           if (result.ok === false) {
+            setNote({ tone: 'error', text: reasonText(t, result.reason) })
+          } else if (result.reason !== undefined && result.reason !== '') {
+            // ok 但没交出去：说清原因，别装作成功
             setNote({ tone: 'error', text: reasonText(t, result.reason) })
           } else {
             if (action === 'send') setDraft('')
