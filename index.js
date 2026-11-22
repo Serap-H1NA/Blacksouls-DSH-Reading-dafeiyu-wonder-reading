@@ -258,6 +258,12 @@ export class DialogueRecorder {
     this.panelPath = path.join(this.dataDir, PANEL_FILE)
     this.commandPath = path.join(this.dataDir, COMMAND_FILE)
     this.shotsDir = path.join(this.dataDir, 'shots')
+    /** 手动事件标注：{"6#15": "告示牌"}，见 loadEventLabels()。 */
+    /** 地图事件的图形缓存（地图快照只含附近事件、会轮转，这里把它攒起来）。 */
+    this.eventGraphics = {}
+    this.eventGraphicsDirty = false
+    this.eventLabels = {}
+    this.eventLabelsMtime = null
 
     this.cursor = null
     this.lastFileAt = 0
@@ -569,7 +575,7 @@ export class DialogueRecorder {
       const body = block.lines
         .map((line) => {
           const choice = line.choices.length > 0 ? `\n  > 选项：${line.choices.join(' / ')}` : ''
-          const who = line.speaker.length > 0 ? `${line.speaker}：` : line.battle === true ? '[战斗] ' : line.eventKind ? `〔${line.eventKind}〕` : line.eventName ? `〔${line.eventName}〕` : ''
+          const who = line.speaker.length > 0 ? `${line.speaker}：` : line.battle === true ? '[战斗] ' : line.eventKind ? `〔${line.eventKind}〕` : line.eventName ? `〔事件 ${line.eventName}〕` : ''
           return `- ${who}${line.text.replace(/\n/g, '\n  ')}${choice}`
         })
         .join('\n')
@@ -635,7 +641,18 @@ export class DialogueRecorder {
       try {
         const parsed = JSON.parse(fs.readFileSync(path.join(directory, newest), 'utf8'))
         const events = new Map()
-        for (const event of parsed?.events ?? []) events.set(Number(event?.id), event)
+        for (const event of parsed?.events ?? []) {
+          const id = Number(event?.id)
+          events.set(id, event)
+          if (id) {
+            const graphic = `${String(event?.character_name ?? '')}#${Number(event?.character_index ?? 0)}`
+            const slot = `${Number(parsed?.map_id)}#${id}`
+            if (this.eventGraphics[slot] !== graphic) {
+              this.eventGraphics[slot] = graphic
+              this.eventGraphicsDirty = true
+            }
+          }
+        }
         this.mapCache = { file: newest, mapId: Number(parsed?.map_id), events }
       } catch {
         return undefined
@@ -652,12 +669,75 @@ export class DialogueRecorder {
    *   1 = 告示牌（只剩它没验过）
    * 新发现直接改这张表；未列出的编号退回「事件:EVxxx」，不瞎标。
    */
+  graphicsCachePath() {
+    return path.join(this.settings.dataDir, 'map-events.json')
+  }
+
+  loadEventGraphics() {
+    if (this.eventGraphicsLoaded) return
+    this.eventGraphicsLoaded = true
+    try {
+      const parsed = JSON.parse(fs.readFileSync(this.graphicsCachePath(), 'utf8'))
+      if (parsed && typeof parsed === 'object') {
+        for (const [key, value] of Object.entries(parsed)) {
+          if (typeof value === 'string') this.eventGraphics[key] = value
+        }
+      }
+    } catch {
+      // 首次运行没有缓存文件，正常
+    }
+  }
+
+  saveEventGraphics() {
+    if (!this.eventGraphicsDirty) return
+    this.eventGraphicsDirty = false
+    try {
+      fs.writeFileSync(this.graphicsCachePath(), JSON.stringify(this.eventGraphics, null, 2), 'utf8')
+    } catch {
+      // 写不进去不影响记录
+    }
+  }
+
+  /**
+   * 手动标注表：`<dataDir>/event-labels.json`，形如 {"6#15": "告示牌"}。
+   * 游戏里有整类事件根本没有图形——告示牌画在地砖上、事件本身是隐形的，
+   * 所以从数据上分不出来，只能由人标一次，之后自动套用。
+   */
+  loadEventLabels() {
+    const file = path.join(this.settings.dataDir, 'event-labels.json')
+    try {
+      const stat = fs.statSync(file)
+      if (this.eventLabelsMtime === stat.mtimeMs) return
+      const parsed = JSON.parse(fs.readFileSync(file, 'utf8'))
+      const labels = {}
+      if (parsed && typeof parsed === 'object') {
+        for (const [key, value] of Object.entries(parsed)) {
+          if (typeof value === 'string' && value.trim()) labels[key.trim()] = value.trim()
+        }
+      }
+      this.eventLabels = labels
+      this.eventLabelsMtime = stat.mtimeMs
+    } catch {
+      // 不存在或坏掉都当作「没有标注」，不影响记录
+    }
+  }
+
   eventKind(mapId, eventId) {
     if (!mapId || !eventId) return ''
+    this.loadEventLabels()
+    const labelled = this.eventLabels[`${Number(mapId)}#${Number(eventId)}`]
+    if (labelled) return labelled
+    this.loadEventGraphics()
     const event = this.mapEventFor(mapId, eventId)
-    if (event === undefined) return ''
-    const key = `${String(event.character_name ?? '')}#${Number(event.character_index ?? 0)}`
-    return EVENT_KINDS[key] ?? ''
+    let graphic = ''
+    if (event !== undefined) {
+      graphic = `${String(event.character_name ?? '')}#${Number(event.character_index ?? 0)}`
+    } else {
+      graphic = this.eventGraphics[`${Number(mapId)}#${Number(eventId)}`] ?? ''
+    }
+    this.saveEventGraphics()
+    if (!graphic) return ''
+    return EVENT_KINDS[graphic] ?? ''
   }
 
   stateDirectory() {
