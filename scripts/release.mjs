@@ -31,6 +31,7 @@ const FILES = [
   'cordis.patch.yml.example',
   'docs/DETAIL.md',
   'docs/PR.md',
+  'docs/awesome-entry.yml',
   'docs/preview.png',
   'scripts/apply_bridge_patch.py',
   'scripts/release.mjs',

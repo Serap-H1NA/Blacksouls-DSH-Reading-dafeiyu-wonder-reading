@@ -1,0 +1,9 @@
+# 上架投稿用：把这个文件放到 awesome-dsh-plugin 仓库的 data/plugins/ 下。
+# 文件名必须是 <owner>__<repo>.yml —— 与下面 url 里的 owner/repo 完全一致。
+url: https://github.com/Serap-H1NA/dafeiyu-wonder-reading-v0.01
+name: Serap-H1NA/dafeiyu-wonder-reading-v0.01
+category: fun
+description:
+  en: 'Reads BLACK SOULS II in-game dialogue (line, speaker, map, and whether it came from a bloodstain, corpse or sign) and hands it to the agent only when you press a button — read, look at a screenshot, or write a reading report; ships a floating widget that docks beside the game window.'
+  zh: '把《BLACK SOULS II》游戏里读到的对话（台词、说话人、地图、是血迹还是尸体）记下来，按下按钮才交给 agent 阅读、看插图或写阅读报告；附一个吸在游戏窗口旁的悬浮窗。'
+icon: https://raw.githubusercontent.com/Serap-H1NA/dafeiyu-wonder-reading-v0.01/HEAD/docs/preview.png
