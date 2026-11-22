@@ -1,0 +1,21 @@
+# 依赖与构建产物
+node_modules/
+__pycache__/
+*.pyc
+
+# 本地备份（我改代码时留下的 .bak-*）
+*.bak-*
+*.bak
+
+# 运行数据：阅读记录、截图、悬浮窗状态都不进仓库
+阅读记录/
+shots/
+dist/
+
+# 本机专用配置（仓库里只有 .example）
+cordis.patch.local.yml
+
+# 编辑器
+.vscode/
+.idea/
+.DS_Store
